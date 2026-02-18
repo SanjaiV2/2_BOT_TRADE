@@ -195,11 +195,31 @@ def render_metric_card(label, value, sub_label, icon, color):
     """, unsafe_allow_html=True)
 
 def render_standby_screen():
-    """Affiche le radar animé quand le marché est fermé"""
+    """Affiche le radar animé quand le marché est fermé ou session inactive"""
+    from datetime import datetime
+    import pytz
+    now = datetime.now(pytz.timezone("Europe/Paris"))
+    heure = now.strftime("%H:%M")
+    heure_utc = datetime.now(pytz.utc).hour
+
+    # Message dynamique selon l'heure
+    if 0 <= heure_utc < 8:
+        msg_status = "SESSION ASIATIQUE // FAIBLE VOLUME"
+        msg_next = "SCAN ACTIF A 09:00 (HEURE DE PARIS)"
+        couleur_next = "#FFD700"
+    elif heure_utc >= 22 or (heure_utc == 21 and datetime.now(pytz.utc).minute >= 0):
+        msg_status = "MARCHE FERME // FIN DE SESSION"
+        msg_next = "PROCHAINE SESSION: DEMAIN 09:00"
+        couleur_next = "#EF4444"
+    else:
+        msg_status = "MARKET CLOSED // PROTOCOL: SLEEP"
+        msg_next = "PROCHAINE OUVERTURE: DIMANCHE 23:00 UTC"
+        couleur_next = "#FFD700"
+
     st.markdown("<br>", unsafe_allow_html=True)
     c1, c2, c3 = st.columns([1, 2, 1])
     with c2:
-        st.markdown("""
+        st.markdown(f"""
             <div style="text-align: center;">
                 <div class="radar-container">
                     <div class="radar-grid"></div>
@@ -207,32 +227,44 @@ def render_standby_screen():
                 </div>
                 <h2 style="color: #666; margin-top: 30px;">SYSTEM STANDBY</h2>
                 <div style="font-family: 'Roboto Mono'; color: #444; font-size: 12px; margin-top: 10px;">
-                    MARKET CLOSED // PROTOCOL: SLEEP<br>
-                    <span style="color: #FFD700;">NEXT SESSION: SUNDAY 23:00 UTC</span>
+                    {msg_status}<br>
+                    <span style="color: {couleur_next};">{msg_next}</span>
+                </div>
+                <div style="margin-top:15px; font-family:'Roboto Mono'; color:#333; font-size:11px;">
+                    PARIS: {heure} &nbsp;|&nbsp; SCANNER: ACTIF
                 </div>
             </div>
         """, unsafe_allow_html=True)
 
 def render_sidebar_footer():
-    """Footer animé dans la sidebar"""
-    st.sidebar.markdown("""
-    <div style="margin-top: 50px; padding: 20px; background: rgba(255,255,255,0.02); border-radius: 10px;">
-        <div style="font-family: 'Orbitron'; font-size: 10px; color: #666; margin-bottom: 10px;">RECENT ACTIVITY</div>
-        
-        <div style="display: flex; align-items: center; margin-bottom: 10px;">
-            <div style="width: 20px; text-align: center; margin-right: 10px;">🛡️</div>
-            <div>
-                <div style="font-size: 11px; color: #ccc;">Risk Manager</div>
-                <div style="font-size: 9px; color: #555;">Check Passed</div>
-            </div>
+    """Footer dans la sidebar - version robuste sans emoji HTML"""
+    from datetime import datetime
+    import pytz
+    now = datetime.now(pytz.timezone("Europe/Paris"))
+    heure = now.strftime("%H:%M")
+    session = "Londres" if 9 <= now.hour < 17 else ("NY" if 14 <= now.hour < 22 else "Hors session")
+    couleur_session = "#10B981" if now.hour >= 9 else "#F59E0B"
+
+    st.sidebar.markdown(f"""
+    <div style="margin-top:30px; padding:15px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,215,0,0.15); border-radius:10px;">
+        <div style="font-family:'Orbitron',sans-serif; font-size:10px; color:#FFD700; margin-bottom:12px; letter-spacing:2px;">SYSTEM STATUS</div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+            <span style="font-size:11px; color:#888;">Heure Paris</span>
+            <span style="font-size:11px; color:#fff; font-family:'Roboto Mono',monospace;">{heure}</span>
         </div>
-        
-        <div style="display: flex; align-items: center;">
-            <div style="width: 20px; text-align: center; margin-right: 10px;">📡</div>
-            <div>
-                <div style="font-size: 11px; color: #ccc;">Data Feed</div>
-                <div style="font-size: 9px; color: #10B981;">Connected (12ms)</div>
-            </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+            <span style="font-size:11px; color:#888;">Session</span>
+            <span style="font-size:11px; color:{couleur_session}; font-weight:bold;">{session}</span>
         </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+            <span style="font-size:11px; color:#888;">Risk Manager</span>
+            <span style="font-size:11px; color:#10B981;">OK</span>
+        </div>
+        <div style="display:flex; justify-content:space-between;">
+            <span style="font-size:11px; color:#888;">Data Feed</span>
+            <span style="font-size:11px; color:#10B981;">12ms</span>
+        </div>
+        <div style="margin-top:12px; height:1px; background:linear-gradient(90deg, transparent, rgba(255,215,0,0.4), transparent);"></div>
+        <div style="margin-top:10px; font-size:9px; color:#444; text-align:center; font-family:'Roboto Mono',monospace;">PREDATOR V12 INSTITUTIONAL</div>
     </div>
     """, unsafe_allow_html=True)

@@ -1,6 +1,6 @@
 {
-    "max_positions": 0.05,
-    "max_daily_trades": 3,
+    "max_positions": 1.0,
+    "max_daily_trades": 2,
     "risk_per_trade": 1.0,
     "max_daily_loss": 3.0,
     "max_daily_profit": 6.0,

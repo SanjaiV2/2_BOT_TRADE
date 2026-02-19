@@ -3,7 +3,7 @@ import json
 import os
 from datetime import datetime
 import pytz
-from ai_brain_v3_sniper import get_ai_prediction  # Version SNIPER
+from ai_brain import get_ai_prediction  # Version SNIPER
 from mt5_connector import MT5Connector
 from position_manager import PositionManager
 import requests

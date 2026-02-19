@@ -1,0 +1,13 @@
+{
+    "max_positions": 0.05,
+    "max_daily_trades": 3,
+    "risk_per_trade": 1.0,
+    "max_daily_loss": 3.0,
+    "max_daily_profit": 6.0,
+    "min_cooldown_minutes": 120,
+    "trailing_stop_enabled": true,
+    "trailing_stop_activation": 1.5,
+    "trailing_stop_distance": 0.8,
+    "break_even_enabled": true,
+    "break_even_trigger": 1.0
+}

@@ -1091,3 +1091,10 @@ For `use_container_width=True`, use `width='stretch'`. For `use_container_width=
   df['DXY'] = dxy['Close'].reindex(df.index, method='ffill').fillna(method='ffill')
 /Users/sanjai/Documents/2_bot-projet/ai_brain.py:134: FutureWarning: Series.fillna with 'method' is deprecated and will raise in a future version. Use obj.ffill() or obj.bfill() instead.
   df['DXY'] = dxy['Close'].reindex(df.index, method='ffill').fillna(method='ffill')
+2026-02-19 00:50:23.931 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+./start_bot.sh: line 23: 11402 Killed: 9               streamlit run app.py
+🛑 Arrêt du système PREDATOR...
